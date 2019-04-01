@@ -7,7 +7,7 @@ Developer: Nicolai Spohrer (nicolai[at]xeve.de)
 * Responsive main and admin interface
 * Products that are sorted into categories and can be purchased by all users in the main interface (e.g. on a tablet, phones or PCs)
 * Detailed information about every purchase
-* Creation of invoices for unbilled purchases
+* Creation of invoices for unbilled purchases and payments
 * Management of users who do not pay themselves ("dependants"/"friends"), but for whose purchases some other user is responsible
 * Semi-automatical mailing of 
   * invoices
@@ -20,6 +20,8 @@ Developer: Nicolai Spohrer (nicolai[at]xeve.de)
 * Free items
   * Users can choose to "donate" products to all other users so that they can be purchased for no cost
   * Useful for birthday events etc.
+* Users can be "autolocked" if their balance falls below a threshold two times in a row
+* ...
 # Explanation & screenshots
 
 ![](/docs/pybarsys-principle.png)
@@ -43,14 +45,18 @@ Main interface on phone|Invoice mail|Invoice mail: purchases of a dependant
 ![](/docs/screenshots/screenshot-18.png)|![](/docs/screenshots/screenshot-19.png)|![](/docs/screenshots/screenshot-20.png)
 
 # Limitations
- * No complete German translation (only mail templates and some automatic stuff)
+ * German and Dutch translations are available for the mail templates, but not for the main and admin interface
  * Based on the assumption that everyone with access to the main page may purchase products for all active users
    * You should run the server in a trusted local area network
    * Login needed for admin access of course
    * Don't make this available to the internet...
  * [...]
 # Installation
-1. Download pybarsys into e.g. /var/www/pybarsys
+1. Download pybarsys into e.g. `/var/www/pybarsys`
+   ```bash
+   cd /var/www
+   git clone https://github.com/nspo/pybarsys.git
+   ```
 2. Setup virtualenv
    ```bash
    cd /var/www/
@@ -62,24 +68,28 @@ Main interface on phone|Invoice mail|Invoice mail: purchases of a dependant
    python3 manage.py migrate
    # Optional: test with builtin server
    python3 manage.py runserver 0.0.0.0:4000 --insecure
-   # CTRL+C
+   # CTRL+
    ```
-3. Think about [how to deploy Django](https://docs.djangoproject.com/en/1.11/howto/deployment/)
+3. Think about [how to deploy Django](https://docs.djangoproject.com/en/1.11/howto/deployment/): Django is written in Python and does not include a real webserver. Therefore you need something else (e.g. Apache2) to run a Django site.
 4. Easiest/example method to deploy: [apache2 with mod_wsgi](https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/modwsgi/)
 5. Install apache2 (if not yet installed)
 
    ```bash
    sudo apt-get install libapache2-mod-wsgi-py3 apache2
    ```
-6. Fix permissions (database access needs r/w in pybarsys folder and db.sqlite3)
+6. Fix permissions (database access needs r/w in pybarsys folder and `db.sqlite3`)
    ```bash
    sudo chown www-data .
    sudo chown www-data db.sqlite3
    ```
+   Alternative, more drastic version if apache2 later complains about not having permissions:
+   ```bash
+   sudo chown www-data -R .
+   ```
 7. Create pybarsys apache2 config file (examples should work on Debian/Ubuntu and related Linux distributions):
 
    ```bash
-   sudo vim /etc/apache2/sites-available/pybarsys.conf
+   sudo nano /etc/apache2/sites-available/pybarsys.conf
    ```
    
    File contents (example):
@@ -100,30 +110,68 @@ Main interface on phone|Invoice mail|Invoice mail: purchases of a dependant
         </Directory>
     </VirtualHost>
    ```
-8. Reload apache2
-   ```sudo systemctl restart apache2```
+8. Disable apache2 default site that uses port 80, enable pybarsys site and restart apache2
+   ```bash
+   sudo a2dissite 000-default
+   sudo a2ensite pybarsys
+   sudo systemctl restart apache2
+   ```
    
-9. Change pybarsys/settings.py: switch to production_yourbar settings file
-10. Copy pybarsys/_settings/production.py to pybarsys/_settings/production_yourbar.py:
+9. Copy `pybarsys/_settings/production.py` to `pybarsys/_settings/production_yourbar.py` and set your own settings:
+   ```bash
+   cd /var/www/pybarsys/pybarsys/_settings
+   cp production.py production_yourbar.py
+   nano production_yourbar.py
+   ```
    * Set own `SECRET_KEY`
-   * Set `LANGUAGE_CODE` (e.g. `"de-de"` for German)
-     * You can also switch to the German mail templates (with PybarsysPreferences)
+   * Set `LANGUAGE_CODE` (e.g. `"de-de"` for German, `"nl-NL"` or `"en-US"`)
+     * Note that the LANGUAGE_CODE currently has to have the form "ab-CD" with a dash in the middle
+     * You can also switch to the German or Dutch mail templates (with PybarsysPreferences)
    * Change mail settings (`EMAIL_HOST` etc.) to be able to send invoices
    * Set PybarsysPreferences (have a look at `common.py` to see all options)
    * Set own STATIC_URL if needed
    * ...
+   * This copy is necessary to have a clear differentiation between your custom config and the pybarsys default files. Otherwise, your configuration might accidentally be overwritten when you download a pybarsys update.
    
-11. Create superuser
+10. Change `pybarsys/settings.py`: comment out dev settings and uncomment the line with `production_yourbar` so that the `pybarsys/_settings/production_yourbar.py` settings file is used
+   
+11. Reload Apache2 to use new settings:
+   ```sudo systemctl reload apache2```
+12. Create pybarsys superuser
    ```python
-   /v/w/pybarsys> sudo python3 manage.py shell
+   /var/www/pybarsys> sudo python3 manage.py shell
    from barsys.models import *
    u=User.objects.create_superuser(email="admin@example.com", password="example", display_name="Admin")
    u.is_buyer = False
    u.save()
    u2=User.objects.create(email="jessica@example.com", display_name="Jessica")
    ```
-12. Login at http://localhost/admin/ and create other users, categories, products, ...
-13. Adapt mail templates under barsys/templates/email/ to your own preferences
+13. Login at http://your_server_ip/admin/ to create more users, categories, products etc. and understand pybarsys
+
+# How to update pybarsys?
+```bash
+sudo systemctl stop apache2
+cd /var/www
+sudo cp -a pybarsys /var/backups/2000-01-01-pybarsys # backup!
+cd pybarsys
+git diff # see what files you have changed
+```
+You should *only* have changed `pybarsys/settings.py` to reference your own `production_yourbar` settings.
+If that is the case, proceed as follows. Otherwise, change everything back to the pybarsys default except `python/settings.py` or at least be careful what you do.
+
+Make sure you have write permissions for pybarsys. In this example the current user `it` is in the group assigned to pybarsys but has no write permissions. If you want to set the group of all files to `it` first, you could do `sudo chgrp it -R .`.
+```bash
+sudo chmod g+rw -R . # allow reading/writing to all files in current folder for group
+git stash # stash changes to python/settings.py
+git pull # get pybarsys update
+git stash pop # pop stashed changes from above
+
+source bin/activate # activate virtual environment
+pip3 install -r requirements.txt # update dependencies
+python3 manage.py migrate # update database
+sudo systemctl start apache2
+```
+Finally, test whether everything works again. If not, you can try to fix the error or use your backup.
 
 # Bug reports
 Please feel free to open an issue in case you think you spotted a bug.
