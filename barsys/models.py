@@ -15,6 +15,7 @@ from django.urls import reverse
 from django.utils import formats
 from django.utils import timezone
 from django.utils.timezone import localtime
+from django.utils.timezone import now
 
 from barsys.templatetags.barsys_helpers import currency
 
@@ -292,9 +293,15 @@ class Product(models.Model):
 
 
 class Stock(models.Model):
+    def __str__(self):
+        return "Count: {} {} ({})".format(self.count, self.product.name, self.countdate.date())
     product = models.ForeignKey(Product, on_delete=models.PROTECT, null=False)
     count = models.CharField(max_length=12, blank=False)
+    countdate = models.DateTimeField(blank=False, default=now)
     date = models.DateTimeField(auto_now_add=True)
+
+    def cannot_be_deleted(self):
+        return False
 
     def get_absolute_url(self):
         return reverse('admin_inventory_detail', kwargs={'pk': self.pk})

@@ -15,7 +15,7 @@
     <tr>
         <th>Product</th>
         <th>Count</th>
-        <th>Date</th>
+        <th>Count-date</th>
         <th>{% bicon 'info-sign' %}</th>
         <th>{% bicon 'pencil' %}</th>
         <th>{% bicon 'trash' %}</th>
@@ -24,10 +24,10 @@
 {% block tablebody %}
     {% for stock in object_list %}
         <tr>
-            <td><a href="{% url 'admin_inventory_detail' stock.pk %}">{% if stock.product.is_bold %}
+            <td><a href="{% url 'admin_product_detail' stock.product.pk %}">{% if stock.product.is_bold %}
                 <strong>{% endif %}{{ stock.product.name }}{% if stock.product.is_bold %}</strong>{% endif %}</a></td>
             <td>{{ stock.count }}</td>
-            <td>{{ stock.date }}</td>
+            <td>{{ stock.countdate }}</td>
             <td>
                 <a href="{% url 'admin_inventory_detail' stock.pk %}">{% bicon 'info-sign' %}</a>
             </td>
