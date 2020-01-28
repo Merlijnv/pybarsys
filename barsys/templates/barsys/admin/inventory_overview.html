@@ -1,0 +1,44 @@
+{% extends 'barsys/admin/list_base.html' %}
+
+{% load bootstrap3 %}
+{% load crispy_forms_tags %}
+{% load barsys_helpers %}
+{% load humanize %}
+
+{% block above_table %}
+    <h1 class="pull-left" style="margin-top: 0;">Inventory</h1>
+    <a href="{% url 'admin_inventory_new' %}">
+        <button class="btn btn-primary pull-right">{% bootstrap_icon 'plus' %} Add inventory count</button>
+    </a>
+{% endblock %}
+{% block tablehead %}
+    <tr>
+        <th>Product</th>
+        <th>Count</th>
+        <th>Count-date</th>
+        <th>{% bicon 'info-sign' %}</th>
+        <th>{% bicon 'pencil' %}</th>
+        <th>{% bicon 'trash' %}</th>
+    </tr>
+{% endblock %}
+{% block tablebody %}
+    {% for stock in object_list %}
+        <tr>
+            <td><a href="{% url 'admin_product_detail' stock.product.pk %}">{% if stock.product.is_bold %}
+                <strong>{% endif %}{{ stock.product.name }}{% if stock.product.is_bold %}</strong>{% endif %}</a></td>
+            <td>{{ stock.count }}</td>
+            <td>{{ stock.countdate }}</td>
+            <td>
+                <a href="{% url 'admin_inventory_detail' stock.pk %}">{% bicon 'info-sign' %}</a>
+            </td>
+            <td><a href="{% url 'admin_inventory_update' stock.pk %}">{% bicon 'pencil' %}</a>
+            </td>
+            <td><a href="{% url 'admin_inventory_delete' stock.pk %}">{% bicon 'trash' %}</a>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}
+
+{% block additional_content %}
+    {% include "barsys/admin/list_filter.html" with center=True %}
+{% endblock %}

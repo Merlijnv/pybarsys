@@ -106,11 +106,13 @@ class ProductFilter(django_filters.FilterSet):
 
 
 class InventoryFilter(django_filters.FilterSet):
-    name = django_filters.CharFilter(lookup_expr='icontains')
+
+    countdate = django_filters.DateTimeFromToRangeFilter(
+        help_text="Format YYYY-MM-DD HH:MM. Time is 00:00 by default.")
 
     class Meta:
         model = Stock
-        fields = ["product", "count", "date"]
+        fields = ["product", "count", "countdate"]
 
 
 class StatsDisplayFilter(django_filters.FilterSet):

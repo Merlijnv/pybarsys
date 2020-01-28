@@ -300,6 +300,10 @@ class Stock(models.Model):
     countdate = models.DateTimeField(blank=False, default=now)
     date = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ["countdate", "product"]
+
+
     def cannot_be_deleted(self):
         return False
 
