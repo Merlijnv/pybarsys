@@ -285,24 +285,24 @@ class InventoryListView(UserIsAdminMixin, FilterView):
 
 
 class InventoryDetailView(UserIsAdminMixin, DetailView):
-    model = Product
+    model = Stock
     template_name = "barsys/admin/inventory_detail.html"
 
 
 class InventoryCreateView(UserIsAdminMixin, edit.CreateView):
-    model = Product
-    form_class = ProductForm
+    model = Stock
+    form_class = InventoryForm
     template_name = "barsys/admin/inventory_new.html"
 
 
 class InventoryUpdateView(UserIsAdminMixin, edit.UpdateView):
-    model = Product
-    form_class = ProductForm
+    model = Stock
+    form_class = InventoryForm
     template_name = "barsys/admin/inventory_update.html"
 
 
 class InventoryDeleteView(UserIsAdminMixin, CheckedDeleteView):
-    model = Product
+    model = Stock
     success_url = reverse_lazy('admin_inventory_list')
 
 

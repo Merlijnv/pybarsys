@@ -296,6 +296,8 @@ class Stock(models.Model):
     count = models.CharField(max_length=12, blank=False)
     date = models.DateTimeField(auto_now_add=True)
 
+    def get_absolute_url(self):
+        return reverse('admin_inventory_detail', kwargs={'pk': self.pk})
 
 class InvoiceQuerySet(models.QuerySet):
     def sum_amount(self):

@@ -23,18 +23,17 @@
 {% endblock %}
 {% block tablebody %}
     {% for stock in object_list %}
-        <h3> error {{object_list}} </h3>
         <tr>
-            <td><a href="{% url 'admin_product_detail' stock.product.pk %}">{% if stock.product.is_bold %}
+            <td><a href="{% url 'admin_inventory_detail' stock.pk %}">{% if stock.product.is_bold %}
                 <strong>{% endif %}{{ stock.product.name }}{% if stock.product.is_bold %}</strong>{% endif %}</a></td>
             <td>{{ stock.count }}</td>
             <td>{{ stock.date }}</td>
             <td>
-                <a href="{% url 'admin_inventory_detail' product.pk %}">{% bicon 'info-sign' %}</a>
+                <a href="{% url 'admin_inventory_detail' stock.pk %}">{% bicon 'info-sign' %}</a>
             </td>
-            <td><a href="{% url 'admin_inventory_update' product.pk %}">{% bicon 'pencil' %}</a>
+            <td><a href="{% url 'admin_inventory_update' stock.pk %}">{% bicon 'pencil' %}</a>
             </td>
-            <td><a href="{% url 'admin_inventory_delete' product.pk %}">{% bicon 'trash' %}</a>
+            <td><a href="{% url 'admin_inventory_delete' stock.pk %}">{% bicon 'trash' %}</a>
             </td>
         </tr>
     {% endfor %}

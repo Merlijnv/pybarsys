@@ -317,6 +317,10 @@ class ProductForm(forms.ModelForm):
         model = Product
         exclude = ('',)
 
+class InventoryForm(forms.ModelForm):
+    class Meta:
+        model = Stock
+        exclude = ('',)
 
 class PaymentForm(forms.ModelForm):
     class Meta:
