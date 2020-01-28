@@ -283,6 +283,13 @@ class InventoryListView(UserIsAdminMixin, FilterView):
 
     paginate_by = 10
 
+class InventoryOverviewView(UserIsAdminMixin, FilterView):
+    filterset_class = filters.InventoryFilter
+    template_name = 'barsys/admin/inventory_overview.html'
+
+class InventoryRecountView(UserIsAdminMixin, FilterView):
+    filterset_class = filters.InventoryFilter
+    template_name = 'barsys/admin/inventory_recount.html'
 
 class InventoryDetailView(UserIsAdminMixin, DetailView):
     model = Stock

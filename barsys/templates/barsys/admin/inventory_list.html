@@ -7,9 +7,15 @@
 
 {% block above_table %}
     <h1 class="pull-left" style="margin-top: 0;">Inventory</h1>
-    <a href="{% url 'admin_inventory_new' %}">
-        <button class="btn btn-primary pull-right">{% bootstrap_icon 'plus' %} Add inventory count</button>
-    </a>
+    <div class="pull-right">
+        <a href="{% url 'admin_inventory_overview' %}">
+            <button class="btn btn-primary">{% bootstrap_icon 'th-large' %} Inventory overview</button>
+        </a>
+        <a href="{% url 'admin_inventory_new' %}">
+            <button class="btn btn-primary">{% bootstrap_icon 'plus' %} Add inventory count</button>
+        </a>
+    </div>
+
 {% endblock %}
 {% block tablehead %}
     <tr>

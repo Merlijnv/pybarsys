@@ -48,6 +48,8 @@ urlpatterns = [
 
     # Stock
     url(r'^admin/inventory/list/$', views.InventoryListView.as_view(), name='admin_inventory_list'),
+    url(r'^admin/inventory/overview/$', views.InventoryOverviewView.as_view(), name='admin_inventory_overview'),
+    url(r'^admin/inventory/recount/$', views.InventoryRecountView.as_view(), name='admin_inventory_recount'),
     url(r'^admin/inventory/new/$', views.InventoryCreateView.as_view(), name='admin_inventory_new'),
     url(r'^admin/inventory/(?P<pk>[0-9]+)/detail/$', views.InventoryDetailView.as_view(), name='admin_inventory_detail'),
     url(r'^admin/inventory/(?P<pk>[0-9]+)/update/$', views.InventoryUpdateView.as_view(), name='admin_inventory_update'),
