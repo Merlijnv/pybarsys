@@ -291,6 +291,12 @@ class Product(models.Model):
         return reverse('admin_product_detail', kwargs={'pk': self.pk})
 
 
+class Stock(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, null=False)
+    count = models.CharField(max_length=12, blank=False)
+    date = models.DateTimeField(auto_now_add=True)
+
+
 class InvoiceQuerySet(models.QuerySet):
     def sum_amount(self):
         total_amount = self.aggregate(total_amount=models.Sum(F("amount_purchases") - F("amount_payments"))).get(

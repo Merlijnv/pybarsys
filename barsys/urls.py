@@ -46,6 +46,13 @@ urlpatterns = [
     url(r'^admin/product/(?P<pk>[0-9]+)/update/$', views.ProductUpdateView.as_view(), name='admin_product_update'),
     url(r'^admin/product/(?P<pk>[0-9]+)/delete/$', views.ProductDeleteView.as_view(), name='admin_product_delete'),
 
+    # Stock
+    url(r'^admin/inventory/list/$', views.InventoryListView.as_view(), name='admin_inventory_list'),
+    url(r'^admin/inventory/new/$', views.InventoryCreateView.as_view(), name='admin_inventory_new'),
+    url(r'^admin/inventory/(?P<pk>[0-9]+)/detail/$', views.InventoryDetailView.as_view(), name='admin_inventory_detail'),
+    url(r'^admin/inventory/(?P<pk>[0-9]+)/update/$', views.InventoryUpdateView.as_view(), name='admin_inventory_update'),
+    url(r'^admin/inventory/(?P<pk>[0-9]+)/delete/$', views.InventoryDeleteView.as_view(), name='admin_inventory_delete'),
+
     # Payment
     url(r'^admin/payment/list/$', views.PaymentListView.as_view(), name='admin_payment_list'),
     url(r'^admin/payment/export/$', views.PaymentExportView.as_view(), name='admin_payment_export'),

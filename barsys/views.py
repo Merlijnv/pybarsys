@@ -275,6 +275,38 @@ class ProductDeleteView(UserIsAdminMixin, CheckedDeleteView):
 
 
 # Product END
+# Inventory BEGIN
+
+class InventoryListView(UserIsAdminMixin, FilterView):
+    filterset_class = filters.InventoryFilter
+    template_name = 'barsys/admin/inventory_list.html'
+
+    paginate_by = 10
+
+
+class InventoryDetailView(UserIsAdminMixin, DetailView):
+    model = Product
+    template_name = "barsys/admin/inventory_detail.html"
+
+
+class InventoryCreateView(UserIsAdminMixin, edit.CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "barsys/admin/inventory_new.html"
+
+
+class InventoryUpdateView(UserIsAdminMixin, edit.UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "barsys/admin/inventory_update.html"
+
+
+class InventoryDeleteView(UserIsAdminMixin, CheckedDeleteView):
+    model = Product
+    success_url = reverse_lazy('admin_inventory_list')
+
+
+# Inventory END
 # StatsDisplay BEGIN
 
 class StatsDisplayListView(UserIsAdminMixin, FilterView):

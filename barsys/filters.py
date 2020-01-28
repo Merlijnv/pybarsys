@@ -105,6 +105,14 @@ class ProductFilter(django_filters.FilterSet):
         fields = ["name", "category", "is_active"]
 
 
+class InventoryFilter(django_filters.FilterSet):
+    name = django_filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model = Stock
+        fields = ["product", "count", "date"]
+
+
 class StatsDisplayFilter(django_filters.FilterSet):
     title = django_filters.CharFilter(lookup_expr='icontains')
 
