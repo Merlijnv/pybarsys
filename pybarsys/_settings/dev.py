@@ -3,6 +3,9 @@ from .common import *
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
+LANGUAGE_CODE = 'nl-NL'
+
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '&_cx6qdzz^1w%per*z6emn$*&937j-^0@q93g+t9fk7hy%8p(%'
 
@@ -16,7 +19,7 @@ TEMPLATES[0]["OPTIONS"]["string_if_invalid"] = "!INVALID!"
 INSTALLED_APPS.append('debug_toolbar')
 
 DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': lambda e: False,
+    'SHOW_TOOLBAR_CALLBACK': lambda e: True,
     'DISABLE_PANELS': {
         'debug_toolbar.panels.redirects.RedirectsPanel',
         'debug_toolbar.panels.templates.TemplatesPanel'
