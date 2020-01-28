@@ -8,7 +8,7 @@
 
 {% block content %}
     <div class="row">
-        <h1 class="pull-left" style="margin-top: 0;">Inventory overview</h1>
+        <h1 class="pull-left" style="margin-top: 0;">W.I.P. Inventory overview</h1>
         <div class="pull-right">
             <a href="{% url 'admin_inventory_recount' %}">
                 <button class="btn btn-primary">{% bootstrap_icon 'repeat' %} recount everything</button>
@@ -20,8 +20,38 @@
     </div>
 
     <div>
-        <h2>W.I.P. Inventory overview</h2>
+        <h2>Inventory overview</h2>
+        <div class="container">
+          <div class="row">
+          {% for stock in object_list %}
+            <div class="col-md-3">
+              <div class="panel panel-{% if stock.count|to_int <= 3 %}danger{% elif stock.count|to_int <= 10 %}warning{% elif stock.count|to_int > 10 %}success{% endif %} mb-4 box-shadow">
+                <div class="panel-heading text-center"><h3>{{ stock.product.name }}</h3></div>
+                  <div class="panel-body">
+                    <div class="text-center">
+                        <h1>{{ stock.count }}</h1>
+                    </div>
+                  <div class="row">
+                      <div class="col-md-9">
+                          <small class="text-muted float-right">{{ stock.countdate.date }}</small>
+                      </div>
+                      <div class="col-md-3 float-right">
+                          <a href="{% url 'admin_inventory_detail' stock.pk %}">{% bicon 'info-sign' %}</a>
+                          <a href="{% url 'admin_inventory_update' stock.pk %}">{% bicon 'pencil' %}</a>
 
+{#                          <div class="btn-group">#}
+{#                              <button type="button" class="btn">View</button>#}
+{#                              <button type="button" class="btn">Edit</button>#}
+{#                          </div>#}
+                      </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+          </div>
+        </div>
     </div>
 
 {% endblock %}

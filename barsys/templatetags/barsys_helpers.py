@@ -71,3 +71,7 @@ def clean_str(instr):
     result_str = re_sub(r'[^A-Za-z0-9 .,\-+]+', '', result_str)
 
     return result_str
+
+@register.filter()
+def to_int(value):
+   return int(value)

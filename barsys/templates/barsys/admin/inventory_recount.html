@@ -6,11 +6,19 @@
 {% load humanize %}
 
 {% block content %}
-    <h1 class="pull-left" style="margin-top: 0;">W.I.P. Inventory recount</h1>
-    <div class="pull-right">
-        <a href="{% url 'admin_inventory_overview' %}">
-            <button class="btn btn-primary">{% bootstrap_icon 'th-large' %} Inventory overview</button>
-        </a>
+    <div class="row">
+        <h1 class="pull-left" style="margin-top: 0;">W.I.P. Inventory recount</h1>
+        <div class="pull-right">
+            <a href="{% url 'admin_inventory_overview' %}">
+                <button class="btn btn-primary">{% bootstrap_icon 'th-large' %} Inventory overview</button>
+            </a>
+        </div>
+    </div>
+
+
+    <div>
+
+    </div>
 {% endblock %}
 
 {% block additional_content %}

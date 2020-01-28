@@ -32,7 +32,7 @@
                             <a href="{% url 'admin_product_list' %}">Products</a>
                         </li>
                         <li>
-                            <a href="{% url 'admin_inventory_list' %}">Inventory</a>
+                            <a href="{% url 'admin_inventory_overview' %}">Inventory</a>
                         </li>
                         <li>
                             <a href="{% url 'admin_category_list' %}">Categories</a>
@@ -88,8 +88,11 @@
         {% endblock %}
     </div>
 
+    {% block additional_content %}{% endblock %}
+
     {% block bootstrap3_extra_script %}
         {% block extra_js %}
         {% endblock %}
     {% endblock %}
+
 {% endblock %}
