@@ -16,7 +16,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from barsys.serializers import PurchaseSerializer, UserSerializer, ProductSerializer
+from barsys.serializers import PurchaseSerializer, UserSerializer, ProductSerializer, InventorySerializer
 from pybarsys.settings import PybarsysPreferences
 from . import filters
 from . import view_helpers
@@ -1161,4 +1161,12 @@ def main_product_api(request):
     if request.method == 'GET':
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET'])
+def main_inventory_api(request, pk):
+    if request.method == 'GET':
+        inventory = Stock.objects.filter(product_id = pk).order_by('-countdate')
+        serializer = InventorySerializer(inventory, many=True)
         return Response(serializer.data)

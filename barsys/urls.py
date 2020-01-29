@@ -46,7 +46,7 @@ urlpatterns = [
     url(r'^admin/product/(?P<pk>[0-9]+)/update/$', views.ProductUpdateView.as_view(), name='admin_product_update'),
     url(r'^admin/product/(?P<pk>[0-9]+)/delete/$', views.ProductDeleteView.as_view(), name='admin_product_delete'),
 
-    # Stock
+    # Inventory
     url(r'^admin/inventory/list/$', views.InventoryListView.as_view(), name='admin_inventory_list'),
     url(r'^admin/inventory/overview/$', views.InventoryOverviewView.as_view(), name='admin_inventory_overview'),
     url(r'^admin/inventory/recount/$', views.InventoryRecountView.as_view(), name='admin_inventory_recount'),
@@ -123,5 +123,7 @@ urlpatterns = [
     # Rest-API
     url(r'^api/purchase/', views.main_purchase_api, name='main_purchase_api'),
     url(r'^api/user/', views.main_user_api, name='main_user_api'),
-    url(r'^api/product/', views.main_product_api, name='main_product_api')
+    url(r'^api/product/', views.main_product_api, name='main_product_api'),
+    url(r'^api/inventory/(?P<pk>[0-9]+)', views.main_inventory_api, name='main_inventory_api')
+
 ]

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from barsys.models import Purchase, User, Product
+from barsys.models import Purchase, User, Product, Stock
 
 
 class PurchaseSerializer(serializers.ModelSerializer):
@@ -22,4 +22,9 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
+        fields = '__all__'
+
+class InventorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Stock
         fields = '__all__'
