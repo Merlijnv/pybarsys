@@ -25,6 +25,8 @@ from .templatetags.barsys_helpers import currency
 from .view_helpers import get_renderable_stats_elements, get_most_bought_product_for_user, \
     get_most_bought_product_for_users
 
+from django.db.models import OuterRef, Subquery
+
 
 class UserIsAdminMixin(UserPassesTestMixin):
     raise_exception = False
@@ -285,7 +287,15 @@ class InventoryListView(UserIsAdminMixin, FilterView):
 
 class InventoryOverviewView(UserIsAdminMixin, FilterView):
     filterset_class = filters.OverviewFilter
+    # result = Stock.objects.order_by('countdate').distinct('product_id').values('product_id')
+    # result = Stock.objects.raw('SELECT * FROM (SELECT * FROM barsys_stock ORDER BY countdate DESC) as x GROUP BY product_id')
+
     template_name = 'barsys/admin/inventory_overview.html'
+
+    # def get_queryset(self):
+    #     """Return the last updated counts."""
+    #
+    #     return Stock.objects.annotate(newest_product_count=Subquery(newest.values('product_id')[:1]))
 
 class InventoryRecountView(UserIsAdminMixin, FilterView):
     filterset_class = filters.InventoryFilter
@@ -294,6 +304,7 @@ class InventoryRecountView(UserIsAdminMixin, FilterView):
 class InventoryDetailView(UserIsAdminMixin, DetailView):
     model = Stock
     template_name = "barsys/admin/inventory_detail.html"
+
 
 
 class InventoryCreateView(UserIsAdminMixin, edit.CreateView):
@@ -1165,8 +1176,11 @@ def main_product_api(request):
 
 
 @api_view(['GET'])
-def main_inventory_api(request, pk):
+def main_inventory_api(request, pk = 0):
     if request.method == 'GET':
-        inventory = Stock.objects.filter(product_id = pk).order_by('-countdate')
+        if (int(pk) != 0):
+            inventory = Stock.objects.filter(product_id = pk).order_by('-countdate')
+        else:
+            inventory = Stock.objects
         serializer = InventorySerializer(inventory, many=True)
         return Response(serializer.data)

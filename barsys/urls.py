@@ -124,6 +124,7 @@ urlpatterns = [
     url(r'^api/purchase/', views.main_purchase_api, name='main_purchase_api'),
     url(r'^api/user/', views.main_user_api, name='main_user_api'),
     url(r'^api/product/', views.main_product_api, name='main_product_api'),
-    url(r'^api/inventory/(?P<pk>[0-9]+)', views.main_inventory_api, name='main_inventory_api')
+    url(r'^api/inventory/(?P<pk>[0-9]+)', views.main_inventory_api, name='main_inventory_api'),
+    url(r'^api/inventory/', views.main_inventory_api, name='main_inventory_api')
 
 ]
