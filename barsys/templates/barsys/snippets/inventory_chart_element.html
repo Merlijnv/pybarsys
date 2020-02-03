@@ -23,7 +23,7 @@
     var colorNames = Object.keys(window.chartColors);
 
     {# FIXME better performance #}
-    {% if product %}
+    {% if object_list is None %}
         products.push([{{ product.id }}, '{{ product.name }}'])
     {% elif object_list %}
         {% for stock in object_list %}
@@ -55,7 +55,6 @@
                     type: 'time',
                     time: {
                         parser: timeFormat,
-                        // round: 'day'
                         unit: 'quarter'
                     },
                     scaleLabel: {
