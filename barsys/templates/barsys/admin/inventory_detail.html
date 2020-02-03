@@ -37,8 +37,7 @@
         </div>
     </div>
 
+    {% include 'barsys/snippets/inventory_chart_element.html' with product=object.product %}
+
 {% endblock %}
 
-{% block additional_content %}
-        {% include 'barsys/snippets/inventory_chart_element.html' with product=object.product %}
-{% endblock %}

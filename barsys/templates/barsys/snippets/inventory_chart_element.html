@@ -21,12 +21,18 @@
       grey: 'rgb(201, 203, 207)'
     };
     var colorNames = Object.keys(window.chartColors);
-    {% for stock in object_list %}
-        if (!product_ids.includes({{ stock.product.id }})) {
-            products.push([{{ stock.product.id }}, '{{ stock.product.name }}']);
-            product_ids.push({{ stock.product.id }});
-        }
-    {% endfor %}
+
+    {# FIXME better performance #}
+    {% if product %}
+        products.push([{{ product.id }}, '{{ product.name }}'])
+    {% elif object_list %}
+        {% for stock in object_list %}
+            if (!product_ids.includes({{ stock.product.id }})) {
+                products.push([{{ stock.product.id }}, '{{ stock.product.name }}']);
+                product_ids.push({{ stock.product.id }});
+            }
+        {% endfor %}
+    {% endif %}
 
     console.log(products)
 
