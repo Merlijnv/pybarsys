@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     'django_filters',
     'crispy_forms',
     'rest_framework',
+    'chartjs',
+    'moment',
 ]
 
 STATIC_URL = '/static/'
@@ -113,6 +115,7 @@ USE_TZ = True
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
+
 BOOTSTRAP3 = {
     # The URL to the jQuery JavaScript file
     'jquery_url': STATIC_URL + '/barsys/jquery/jquery.min.js',
@@ -122,6 +125,10 @@ BOOTSTRAP3 = {
 
     # The complete URL to the Bootstrap CSS file (None means no theme)
     'theme_url': STATIC_URL + '/barsys/bootstrap-3.3.7-dist/css/bootstrap-theme.css',
+
+    "javascript_in_head": True,
+
+    "include_jquery": True,
 
 }
 

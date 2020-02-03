@@ -1,83 +1,85 @@
 {# Template snippet for inventory chart #}
-{% block content %}
-    <h2>Product flow</h2>
-    <p>W.I.P. table with product count data over time</p>
-    <div class="row">
-        <div class="col-sm-12" url-endpoint={% url "main_inventory_api" object.id %}>
-            <canvas id="myChart" width="1000" height="400"></canvas>
-        </div>
-    </div>
-
-{% endblock %}
-{% block additional_content %}
-    <script type="text/javascript" src="/static/js/Chart.min.js"></script>
-    <script type="text/javascript" src="/static/moment/moment.js"></script>
-
-    <script>
-        var endpoint = '/api/inventory/' + {{ product.id }}
-        var defaultData = []
-        var dataPoints = []
-        var labels = []
+<script type="text/javascript" src="/static/js/Chart.min.js"></script>
+<script type="text/javascript" src="/static/moment/moment.js"></script>
 
 
-            var ctx = document.getElementById("myChart");
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    datasets: [{
-                        labels: [],
-                        label: "{{ product.name }}",
-                        data: [],
-                        borderColor: "rgb(10, 112, 172)",
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            },
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Count'
-                            }
-                        }],
-                        xAxes: [{
-
-                        }]
-                    }
-
-
-                }
-            })
-
-
-
-
-        var getData = function() {
-            $.ajax({
-                method: "get",
-                url: endpoint,
-                success: function(data){
-                    labels = data.labels
-                    defaultData = data.default
-
-                    $.each(data, function(key, value){
-                        //dataPoints.push({t: Date.parse(moment.utc(value['countdate']).format('l LT')), y: parseInt(value['count'])});
-                        myChart.data.labels.push(moment.utc(value['countdate']).format('l LT'))
-                        myChart.data.datasets[0].data.push(parseInt(value['count']))
-                    });
-                    //setChart()
-                    myChart.update();
-
-                },
-                error: function(error_data){
-                    console.log("error")
-                    console.log(error_data)
-                }
-            })
+<script>
+    var endpoint = "";
+    var defaultData = []
+    var dataPoints = []
+    var labels = []
+    var products = []
+    var product_ids = []
+    {% for stock in object_list %}
+        if (!product_ids.includes({{ stock.product.id }})) {
+            products.push(product = [{{ stock.product.id }}, '{{ stock.product.name }}']);
+            product_ids.push({{ stock.product.id }});
         }
+    {% endfor %}
 
-        getData();
-    </script>
-{% endblock %}
+
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    labels: [],
+                    label: "test",
+                    data: [],
+                    borderColor: "rgb(10, 112, 172)",
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Count'
+                        }
+                    }],
+                    xAxes: [{
+
+                    }]
+                }
+
+
+            }
+        })
+
+
+
+
+    var getData = function(product_id) {
+        endpoint = '/api/inventory/' + "1"
+        {#endpoint = '/api/inventory/' + product_id#}
+        $.ajax({
+            method: "get",
+            url: endpoint,
+            success: function(data){
+                labels = data.labels
+                defaultData = data.default
+
+                $.each(data, function(key, value){
+                    //dataPoints.push({t: Date.parse(moment.utc(value['countdate']).format('l LT')), y: parseInt(value['count'])});
+                    myChart.data.labels.push(moment.utc(value['countdate']).format('l LT'))
+                    myChart.data.datasets[0].data.push(parseInt(value['count']))
+                });
+                //setChart()
+                myChart.update();
+
+            },
+            error: function(error_data){
+                console.log("error")
+                console.log(error_data)
+            }
+        })
+    }
+    for(product in products){
+        getData(product[1]);
+    }
+
+    {#getData(3);#}
+</script>

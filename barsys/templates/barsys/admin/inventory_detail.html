@@ -38,75 +38,7 @@
     </div>
 
 {% endblock %}
+
 {% block additional_content %}
-    <script type="text/javascript" src="/static/js/Chart.min.js"></script>
-    <script type="text/javascript" src="/static/moment/moment.js"></script>
-
-    <script>
-        var endpoint = '/api/inventory/' + {{ object.product.id }}
-        var defaultData = []
-        var dataPoints = []
-        var labels = []
-
-
-            var ctx = document.getElementById("myChart");
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    datasets: [{
-                        labels: [],
-                        label: "{{ object.product.name }}",
-                        data: [],
-                        borderColor: "rgb(10, 112, 172)",
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            },
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Count'
-                            }
-                        }],
-                        xAxes: [{
-
-                        }]
-                    }
-
-
-                }
-            })
-
-
-
-
-        var getData = function() {
-            $.ajax({
-                method: "get",
-                url: endpoint,
-                success: function(data){
-                    labels = data.labels
-                    defaultData = data.default
-
-                    $.each(data, function(key, value){
-                        //dataPoints.push({t: Date.parse(moment.utc(value['countdate']).format('l LT')), y: parseInt(value['count'])});
-                        myChart.data.labels.push(moment.utc(value['countdate']).format('l LT'))
-                        myChart.data.datasets[0].data.push(parseInt(value['count']))
-                    });
-                    //setChart()
-                    myChart.update();
-
-                },
-                error: function(error_data){
-                    console.log("error")
-                    console.log(error_data)
-                }
-            })
-        }
-
-        getData();
-    </script>
+        {% include 'barsys/snippets/inventory_chart_element.html' with product=object.product %}
 {% endblock %}

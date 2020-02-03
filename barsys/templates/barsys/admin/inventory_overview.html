@@ -50,8 +50,15 @@
         </div>
     </div>
 
+    <h2>Product flow</h2>
+    <p>W.I.P. table with product count data over time</p>
+    <div class="row">
+        <div class="col-sm-12" url-endpoint={% url "main_inventory_api" %}>
+            <canvas id="myChart" width="1000" height="400"></canvas>
+        </div>
+    </div>
 {% endblock %}
 
-{% block additional_content %}
-    {% include "barsys/admin/list_filter.html" with center=True %}
+{% block extra_js %}
+    {% include 'barsys/snippets/inventory_chart_element.html' with product=object_list %}
 {% endblock %}
