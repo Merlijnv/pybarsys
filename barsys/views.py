@@ -25,7 +25,7 @@ from .templatetags.barsys_helpers import currency
 from .view_helpers import get_renderable_stats_elements, get_most_bought_product_for_user, \
     get_most_bought_product_for_users
 
-from django.db.models import OuterRef, Subquery
+from django.db.models import OuterRef, Subquery, F
 
 
 class UserIsAdminMixin(UserPassesTestMixin):
@@ -292,10 +292,18 @@ class InventoryOverviewView(UserIsAdminMixin, FilterView):
 
     template_name = 'barsys/admin/inventory_overview.html'
 
-    # def get_queryset(self):
-    #     """Return the last updated counts."""
-    #
-    #     return Stock.objects.annotate(newest_product_count=Subquery(newest.values('product_id')[:1]))
+    def get_queryset(self):
+        """Return the last updated counts."""
+
+        qs = Stock.objects.all()
+
+        # make a subquery (filter, order, get 'id')
+        sq = qs.filter(product=OuterRef('product_id')).order_by('-countdate').values('id')
+
+        # use subquery in your query (via annotation + filter)
+        return qs.annotate(latest=Subquery(sq[:1])).filter(id=F('latest'))
+
+        # return Stock.objects.order_by('product_id', '-countdate').distinct('product_id')
 
 class InventoryRecountView(UserIsAdminMixin, FilterView):
     filterset_class = filters.InventoryFilter
