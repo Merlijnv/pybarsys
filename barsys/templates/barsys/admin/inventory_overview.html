@@ -57,8 +57,6 @@
             <canvas id="myChart" width="1000" height="400"></canvas>
         </div>
     </div>
-{% endblock %}
+        {% include 'barsys/snippets/inventory_chart_element.html' with product=object_list %}
 
-{% block extra_js %}
-    {% include 'barsys/snippets/inventory_chart_element.html' with product=object_list %}
 {% endblock %}

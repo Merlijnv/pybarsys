@@ -1,6 +1,6 @@
 {# Template snippet for inventory chart #}
+<script type="text/javascript" src="https://momentjs.com/downloads/moment.js"></script>
 <script type="text/javascript" src="/static/js/Chart.min.js"></script>
-<script type="text/javascript" src="/static/moment/moment.js"></script>
 
 
 <script>
@@ -8,66 +8,87 @@
     var defaultData = []
     var dataPoints = []
     var labels = []
+    var timeFormat = 'MM/DD/YYYY HH:mm';
     var products = []
     var product_ids = []
+    window.chartColors = {
+      red: 'rgb(255, 99, 132)',
+      orange: 'rgb(255, 159, 64)',
+      yellow: 'rgb(255, 205, 86)',
+      green: 'rgb(75, 192, 192)',
+      blue: 'rgb(54, 162, 235)',
+      purple: 'rgb(153, 102, 255)',
+      grey: 'rgb(201, 203, 207)'
+    };
+    var colorNames = Object.keys(window.chartColors);
     {% for stock in object_list %}
         if (!product_ids.includes({{ stock.product.id }})) {
-            products.push(product = [{{ stock.product.id }}, '{{ stock.product.name }}']);
+            products.push([{{ stock.product.id }}, '{{ stock.product.name }}']);
             product_ids.push({{ stock.product.id }});
         }
     {% endfor %}
 
+    console.log(products)
 
-        var ctx = document.getElementById("myChart");
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                datasets: [{
-                    labels: [],
-                    label: "test",
-                    data: [],
-                    borderColor: "rgb(10, 112, 172)",
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: [],
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Count'
+                    }
+                }],
+                xAxes: [{
+                    type: 'time',
+                    time: {
+                        parser: timeFormat,
+                        // round: 'day'
+                        unit: 'quarter'
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Date'
+                    }
                 }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        },
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Count'
-                        }
-                    }],
-                    xAxes: [{
-
-                    }]
-                }
-
-
             }
-        })
+
+
+        }
+    })
 
 
 
 
-    var getData = function(product_id) {
-        endpoint = '/api/inventory/' + "1"
-        {#endpoint = '/api/inventory/' + product_id#}
+    var getData = function(product_id, product_name) {
+
+        endpoint = '/api/inventory/' + product_id
         $.ajax({
             method: "get",
             url: endpoint,
             success: function(data){
-                labels = data.labels
-                defaultData = data.default
-
+                var newDataset = {
+                    label: product_name,
+                    backgroundColor: colorNames[product_id],
+                    borderColor: colorNames[product_id],
+                    data: [],
+                    fill: false,
+                    pointRadius: 10,
+                    pointHoverRadius: 15,
+                };
                 $.each(data, function(key, value){
-                    //dataPoints.push({t: Date.parse(moment.utc(value['countdate']).format('l LT')), y: parseInt(value['count'])});
-                    myChart.data.labels.push(moment.utc(value['countdate']).format('l LT'))
-                    myChart.data.datasets[0].data.push(parseInt(value['count']))
+                    newDataset.data.push({
+                        x: moment.utc(value['countdate']).format('l LT'),
+                        y: parseInt(value['count']),
+                    });
                 });
-                //setChart()
+                myChart.data.datasets.push(newDataset);
                 myChart.update();
 
             },
@@ -77,9 +98,7 @@
             }
         })
     }
-    for(product in products){
-        getData(product[1]);
+    for(i = 0; i < products.length; i++){
+        getData(products[i][0],products[i][1]);
     }
-
-    {#getData(3);#}
 </script>
