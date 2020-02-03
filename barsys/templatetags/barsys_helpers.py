@@ -72,6 +72,6 @@ def clean_str(instr):
 
     return result_str
 
-@register.filter()
+@register.filter
 def to_int(value):
    return int(value)
