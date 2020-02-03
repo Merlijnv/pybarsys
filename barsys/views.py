@@ -287,8 +287,6 @@ class InventoryListView(UserIsAdminMixin, FilterView):
 
 class InventoryOverviewView(UserIsAdminMixin, FilterView):
     filterset_class = filters.OverviewFilter
-    # result = Stock.objects.order_by('countdate').distinct('product_id').values('product_id')
-    # result = Stock.objects.raw('SELECT * FROM (SELECT * FROM barsys_stock ORDER BY countdate DESC) as x GROUP BY product_id')
 
     template_name = 'barsys/admin/inventory_overview.html'
 
@@ -302,8 +300,6 @@ class InventoryOverviewView(UserIsAdminMixin, FilterView):
 
         # use subquery in your query (via annotation + filter)
         return qs.annotate(latest=Subquery(sq[:1])).filter(id=F('latest'))
-
-        # return Stock.objects.order_by('product_id', '-countdate').distinct('product_id')
 
 class InventoryRecountView(UserIsAdminMixin, FilterView):
     filterset_class = filters.InventoryFilter

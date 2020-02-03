@@ -5,9 +5,15 @@
 {% block content %}
     <div>
         <h1 class="pull-left" style="margin-top: 0;">Inventory details</h1>
-        <a href="{% url 'admin_inventory_update' object.pk %}">
-            <button class="btn btn-primary pull-right">{% bootstrap_icon 'pencil' %} Change</button>
-        </a>
+        <div class="pull-right">
+            <a href="{% url 'admin_inventory_delete' object.pk %}">
+                <button class="btn btn-primary">{% bootstrap_icon 'trash' %} Delete</button>
+            </a>
+            <a href="{% url 'admin_inventory_update' object.pk %}">
+                <button class="btn btn-primary">{% bootstrap_icon 'pencil' %} Change</button>
+            </a>
+        </div>
+
     </div>
 
     <table class="table table-striped">

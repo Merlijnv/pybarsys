@@ -318,9 +318,16 @@ class ProductForm(forms.ModelForm):
         exclude = ('',)
 
 class InventoryForm(forms.ModelForm):
+
     class Meta:
         model = Stock
         exclude = ('',)
+
+    def clean_countdate(self):
+        countdate = self.cleaned_data['countdate']
+        if countdate > timezone.now():
+            raise forms.ValidationError("The date cannot be in the future!")
+        return countdate
 
 class PaymentForm(forms.ModelForm):
     class Meta:

@@ -32,7 +32,7 @@
                     </div>
                   <div class="row">
                       <div class="col-md-9">
-                          <small class="count-date" data-countdate="{{ stock.countdate }}" class="text-muted float-right">{{ stock.countdate.date }}</small>
+                          <small class="count-date" data-countdate="{{ stock.countdate|date:'Y-m-d H:i' }}" class="text-muted float-right">{{ stock.countdate.date }}</small>
                       </div>
                       <div class="col-md-3 float-right">
                           <a href="{% url 'admin_inventory_detail' stock.pk %}">{% bicon 'info-sign' %}</a>
@@ -50,7 +50,7 @@
     </div>
 
     <h2>Product flow</h2>
-    <p>W.I.P. table with product count data over time</p>
+    <p>Table with product count data over time</p>
     <div class="row">
         <div class="col-sm-12" url-endpoint={% url "main_inventory_api" %}>
             <canvas id="myChart" width="1000" height="400"></canvas>
@@ -63,12 +63,12 @@
              for(var i=0; i < elements.length; i++)
             {
                 var countdate = elements[i].dataset.countdate;
-                moment(countdate).fromNow();
-                elements[i].innerText= countdate;
+                elements[i].innerText += " | " + moment(countdate).fromNow();
+                if(moment().diff(countdate, 'months') > 3){
+                    elements[i].classList.add("text-danger");
+                }
             }
-
         }
-
         window.onload = timeAgo;
     </script>
 {% endblock %}
