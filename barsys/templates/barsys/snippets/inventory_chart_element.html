@@ -7,7 +7,6 @@
     var endpoint = "";
     var timeFormat = 'MM/DD/YYYY HH:mm';
     var products = []
-    var product_ids = []
     window.chartColors = {
       red: 'rgb(255, 99, 132)',
       orange: 'rgb(255, 159, 64)',
@@ -24,10 +23,7 @@
         products.push([{{ product.id }}, '{{ product.name }}'])
     {% elif object_list %}
         {% for stock in object_list %}
-            if (!product_ids.includes({{ stock.product.id }})) {
-                products.push([{{ stock.product.id }}, '{{ stock.product.name }}']);
-                product_ids.push({{ stock.product.id }});
-            }
+            products.push([{{ stock.product.id }}, '{{ stock.product.name }}']);
         {% endfor %}
     {% endif %}
 
