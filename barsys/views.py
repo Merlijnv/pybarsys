@@ -282,8 +282,13 @@ class ProductDeleteView(UserIsAdminMixin, CheckedDeleteView):
 class InventoryListView(UserIsAdminMixin, FilterView):
     filterset_class = filters.InventoryFilter
     template_name = 'barsys/admin/inventory_list.html'
+    paginate_by = 20
 
-    paginate_by = 10
+    def get_filterset_kwargs(self, filterset_class):
+        kwargs = super(InventoryListView, self).get_filterset_kwargs(filterset_class)
+        if kwargs["data"] is None:
+            kwargs["data"] = {"live": False}
+        return kwargs
 
 class InventoryOverviewView(UserIsAdminMixin, FilterView):
     filterset_class = filters.OverviewFilter
@@ -296,13 +301,13 @@ class InventoryOverviewView(UserIsAdminMixin, FilterView):
         qs = Stock.objects.all()
 
         # make a subquery (filter, order, get 'id')
-        sq = qs.filter(product=OuterRef('product_id')).order_by('-countdate').values('id')
+        sq = qs.filter(product=OuterRef('product_id'), live=True).order_by('-countdate').values('id')
 
         # use subquery in your query (via annotation + filter)
         return qs.annotate(latest=Subquery(sq[:1])).filter(id=F('latest'))
 
-class InventoryRecountView(UserIsAdminMixin, FilterView):
-    filterset_class = filters.InventoryFilter
+class InventoryRecountView(UserIsAdminMixin, View):
+
     template_name = 'barsys/admin/inventory_recount.html'
 
 class InventoryDetailView(UserIsAdminMixin, DetailView):

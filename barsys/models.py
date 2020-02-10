@@ -11,6 +11,7 @@ from django.db import IntegrityError
 from django.db import models
 from django.db.models import DecimalField
 from django.db.models import F
+from django.db.models.signals import post_save
 from django.urls import reverse
 from django.utils import formats
 from django.utils import timezone
@@ -299,16 +300,35 @@ class Stock(models.Model):
     count = models.CharField(max_length=12, blank=False)
     countdate = models.DateTimeField(blank=False, default=now)
     date = models.DateTimeField(auto_now_add=True)
+    live = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["countdate", "product"]
-
 
     def cannot_be_deleted(self):
         return False
 
     def get_absolute_url(self):
         return reverse('admin_inventory_detail', kwargs={'pk': self.pk})
+
+def save_count(sender, instance, **kwargs):
+    if instance.live == False:
+        stock = Stock.objects.filter(product_id=instance.product_id, live=True)
+        if not stock:
+            print("empty create new live")
+            stock = Stock(product=instance.product, countdate=instance.countdate, count=instance.count, live=True)
+            stock.save()
+        else:
+            for x in stock:
+                Stock.objects.filter(pk=x.pk).update(live=False)
+
+            stock = Stock(product=instance.product, countdate=instance.countdate, count=instance.count, live=True)
+            stock.save()
+    else:
+        print("test")
+
+
+post_save.connect(save_count, sender=Stock)
 
 class InvoiceQuerySet(models.QuerySet):
     def sum_amount(self):

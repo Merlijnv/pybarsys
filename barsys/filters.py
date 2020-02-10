@@ -110,9 +110,10 @@ class InventoryFilter(django_filters.FilterSet):
     countdate = django_filters.DateTimeFromToRangeFilter(
         help_text="Format YYYY-MM-DD HH:MM. Time is 00:00 by default.")
 
+
     class Meta:
         model = Stock
-        fields = ["product", "count", "countdate"]
+        fields = ["product", "count", "countdate", "live"]
 
 class OverviewFilter(django_filters.FilterSet):
 

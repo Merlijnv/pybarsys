@@ -321,7 +321,7 @@ class InventoryForm(forms.ModelForm):
 
     class Meta:
         model = Stock
-        exclude = ('',)
+        exclude = ('live',)
 
     def clean_countdate(self):
         countdate = self.cleaned_data['countdate']
