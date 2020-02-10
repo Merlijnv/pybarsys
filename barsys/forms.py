@@ -7,6 +7,7 @@ from django.contrib.auth import forms as auth_forms
 from django.utils.translation import ugettext_lazy as _
 
 from .models import *
+from django.forms.models import formset_factory
 
 
 class LoginForm(auth_forms.AuthenticationForm):
@@ -328,6 +329,7 @@ class InventoryForm(forms.ModelForm):
         if countdate > timezone.now():
             raise forms.ValidationError("The date cannot be in the future!")
         return countdate
+
 
 class PaymentForm(forms.ModelForm):
     class Meta:

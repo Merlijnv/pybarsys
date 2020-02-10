@@ -15,6 +15,7 @@ from django_filters.views import FilterView
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.forms import formset_factory
 
 from barsys.serializers import PurchaseSerializer, UserSerializer, ProductSerializer, InventorySerializer
 from pybarsys.settings import PybarsysPreferences
@@ -26,6 +27,8 @@ from .view_helpers import get_renderable_stats_elements, get_most_bought_product
     get_most_bought_product_for_users
 
 from django.db.models import OuterRef, Subquery, F
+
+from django.forms import modelformset_factory
 
 
 class UserIsAdminMixin(UserPassesTestMixin):
@@ -308,7 +311,28 @@ class InventoryOverviewView(UserIsAdminMixin, FilterView):
 
 class InventoryRecountView(UserIsAdminMixin, View):
 
-    template_name = 'barsys/admin/inventory_recount.html'
+    def get(self, request):
+        context = {}
+        InventoryFormset = modelformset_factory(Stock, form=InventoryForm, fields=('count','product',), can_delete=False)
+        formset = InventoryFormset(request.POST or None, queryset=Product.objects.all())
+        context['formset'] = formset
+        return render(request, "barsys/admin/inventory_recount.html", context)
+
+    def post(self, request):
+        context = {}
+        InventoryFormset = modelformset_factory(Stock, form=InventoryForm, fields=('count', 'product',),
+                                                can_delete=False)
+        formset = InventoryFormset(request.POST or None, queryset=Product.objects.all())
+        if formset.is_valid():
+            instances = formset.save(commit=False)
+            for instance in instances:
+                instance.countdate = datetime.datetime.now()
+                instance.id = None
+                instance.save()
+            return redirect("admin_inventory_overview")
+
+
+
 
 class InventoryDetailView(UserIsAdminMixin, DetailView):
     model = Stock

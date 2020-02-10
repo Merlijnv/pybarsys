@@ -16,9 +16,11 @@
     </div>
 
 
-    <div>
-
-    </div>
+    <form method="POST">
+        {% csrf_token %}
+        {{ formset.as_p }}
+        <input class="btn btn-block btn-primary" type="submit" value="Submit">
+    </form>
 {% endblock %}
 
 {% block additional_content %}
