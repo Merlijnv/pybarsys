@@ -17,5 +17,9 @@
         <th>Betalingskenmerk</th>
         <td>{{ pybarsys_preferences.EMAIL.BANK_ACCOUNT_PAYMENT_REFERENCE }} {{ recipient.display_name|clean_str }}</td>
     </tr>
+    <tr>
+        <th>Betaal link</th>
+        <td><a href="{{ invoice.payment_link }}">{{ invoice.payment_link }}</a></td>
+    </tr>
     </tbody>
 </table>
