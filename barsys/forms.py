@@ -112,6 +112,8 @@ class InvoicesCreateForm(forms.Form):
                                            help_text="Automatically lock account if balance is below "
                                                      "number defined in settings before and after creating new invoices.")
 
+    payment_link = forms.URLField(required=False)
+
     def __init__(self, *args, **kwargs):
         super(InvoicesCreateForm, self).__init__(*args, **kwargs)
 
