@@ -302,6 +302,7 @@ class Stock(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     live = models.BooleanField(default=False)
 
+
     class Meta:
         ordering = ["countdate", "product"]
 
@@ -311,24 +312,37 @@ class Stock(models.Model):
     def get_absolute_url(self):
         return reverse('admin_inventory_detail', kwargs={'pk': self.pk})
 
+
 def save_count(sender, instance, **kwargs):
-    if instance.live == False:
+    if not instance.live:
+        print("testingm")
         stock = Stock.objects.filter(product_id=instance.product_id, live=True)
         if not stock:
             print("empty create new live")
+            stock = Stock(product=instance.product, countdate=instance.countdate, count=instance.count, live=False)
+            stock.save()
             stock = Stock(product=instance.product, countdate=instance.countdate, count=instance.count, live=True)
             stock.save()
         else:
-            for x in stock:
-                Stock.objects.filter(pk=x.pk).update(live=False)
+            print("live found")
+            if instance.countdate < stock.latest("countdate").countdate:
+                print("live newer creating historical entry")
+                stock = Stock(product=instance.product, countdate=instance.countdate, count=instance.count, live=False)
+            else:
+                print("live older creating new live and locking the old one")
+                Stock.objects.get(live=True).live = False
+                stock = Stock(product=instance.product, countdate=instance.countdate, count=instance.count, live=True)
 
-            stock = Stock(product=instance.product, countdate=instance.countdate, count=instance.count, live=True)
             stock.save()
     else:
-        print("test")
+        stock = Stock.objects.filter(product_id=instance.product_id, live=True).latest("countdate")
 
+        stock.count = int(stock.count) - int(instance.count)
 
-post_save.connect(save_count, sender=Stock)
+        stock.save()
+
+    post_save.connect(save_count, sender=sender)
+
 
 class InvoiceQuerySet(models.QuerySet):
     def sum_amount(self):
@@ -370,7 +384,7 @@ class InvoiceManager(models.Manager):
 
         own_payments.update(invoice=invoice)
 
-        invoice.payment_link = payment_link;
+        invoice.payment_link = payment_link
 
         invoice.save()
 
@@ -598,6 +612,10 @@ class Purchase(models.Model):
 
     def save(self, *args, **kw):
         self.full_clean()
+        print(self)
+        stock = Stock(product=Product.objects.get(name=self.product_name), countdate=datetime.datetime.now(), count=self.quantity, live=True)
+        # print(stock)
+        save_count(Stock, stock)
         super(Purchase, self).save(*args, **kw)
 
 
