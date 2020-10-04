@@ -300,7 +300,7 @@ class Stock(models.Model):
     count = models.CharField(max_length=12, blank=False)
     countdate = models.DateTimeField(blank=False, default=now)
     date = models.DateTimeField(auto_now_add=True)
-    live = models.BooleanField(default=False)
+    live = models.BooleanField(default=True)
 
 
     class Meta:
