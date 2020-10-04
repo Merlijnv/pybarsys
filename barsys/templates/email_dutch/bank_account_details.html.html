@@ -17,10 +17,10 @@
         <th>Betalingskenmerk</th>
         <td>{{ pybarsys_preferences.EMAIL.BANK_ACCOUNT_PAYMENT_REFERENCE }} {{ recipient.display_name|clean_str }}</td>
     </tr>
-    {% if invoice.payment_link != "" %}
+    {% if invoice.comment != "" %}
     <tr>
-        <th>Betaal link</th>
-        <td><a href="{{ invoice.payment_link }}">{{ invoice.payment_link }}</a></td>
+        <th>Comment</th>
+        <td>{% if is_url(invoice.comment) %}<a href="{{ invoice.comment }}">{% else %}<a>{% endif %} {{ invoice.comment }}</a></td>
     </tr>
     {% endif %}
     </tbody>

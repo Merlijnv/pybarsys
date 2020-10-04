@@ -302,7 +302,7 @@ class InvoiceQuerySet(models.QuerySet):
 
 
 class InvoiceManager(models.Manager):
-    def create_for_user(self, user, payment_link = ""):
+    def create_for_user(self, user, comment = ""):
         if not user.pays_themselves():
             raise IntegrityError("Cannot create an invoice for someone who does not pay for themselves")
 
@@ -331,7 +331,7 @@ class InvoiceManager(models.Manager):
 
         own_payments.update(invoice=invoice)
 
-        invoice.payment_link = payment_link;
+        invoice.comment = comment;
 
         invoice.save()
 
@@ -349,7 +349,7 @@ class Invoice(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
 
-    payment_link = models.URLField(default="")
+    comment = models.TextField(default="")
 
     objects = InvoiceManager.from_queryset(InvoiceQuerySet)()
 

@@ -55,6 +55,16 @@ def formatfunc(value):
         return '-' + PybarsysPreferences.Misc.VALUTASIGN + '{:,.2f}'.format(abs(value))
 
 
+from urllib.parse import urlparse
+
+def is_url(url):
+  try:
+    result = urlparse(url)
+    return all([result.scheme, result.netloc])
+  except ValueError:
+    return False
+
+
 @register.filter
 def keyvalue(dict, key):
     return dict.get(key, '')
