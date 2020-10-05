@@ -6,7 +6,7 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, URLValidator, ValidationError
 from django.db import IntegrityError
 from django.db import models
 from django.db.models import DecimalField
@@ -336,7 +336,6 @@ class InvoiceManager(models.Manager):
         invoice.save()
 
         return invoice
-
 
 class Invoice(models.Model):
     recipient = models.ForeignKey(User, on_delete=models.PROTECT)

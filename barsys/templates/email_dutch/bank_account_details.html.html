@@ -20,7 +20,7 @@
     {% if invoice.comment != "" %}
     <tr>
         <th>Comment</th>
-        <td>{% if is_url(invoice.comment) %}<a href="{{ invoice.comment }}">{% else %}<a>{% endif %} {{ invoice.comment }}</a></td>
+        <td>{{ invoice.comment|urlcheck|safe }}</td>
     </tr>
     {% endif %}
     </tbody>
