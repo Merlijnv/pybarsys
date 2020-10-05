@@ -40,16 +40,16 @@ DEBUG_TOOLBAR_PANELS = [
 ]
 
 # Email settings
-EMAIL_HOST = 'smtp.mailtrap.io'
-EMAIL_HOST_USER = '167cbc61028449'
-EMAIL_HOST_PASSWORD = '0027c3264acf0b'
+EMAIL_HOST = 'localhost'
+# EMAIL_HOST_USER = 'no-reply@example.com'
+# EMAIL_HOST_PASSWORD = 'hunter2'
 EMAIL_FROM_ADDRESS = 'no-reply@example.com'
-EMAIL_PORT = 587  # 587
+EMAIL_PORT = 1025  # 587
 EMAIL_USE_TLS = False  # True
 
 # Put the preferences you want to change here
 # PybarsysPreferences.EMAIL.CONTACT_EMAIL = "bar@ieee.org"
-PybarsysPreferences.EMAIL.TEMPLATE_DIR = "email_dutch"
+# PybarsysPreferences.EMAIL.TEMPLATE_DIR = "email_german"
 # PybarsysPreferences.EMAIL.BANK_ACCOUNT_RECIPIENT = "Foo-Bank"
 # PybarsysPreferences.EMAIL.INVOICE_SUBJECT = "Barrechnung von der Foo-Bar"
 # ...
