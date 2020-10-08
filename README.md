@@ -131,6 +131,7 @@ Main interface on phone|Invoice mail|Invoice mail: purchases of a dependant
    * Change mail settings (`EMAIL_HOST` etc.) to be able to send invoices
    * Set PybarsysPreferences (have a look at `common.py` to see all options)
    * Set own STATIC_URL if needed
+   * If you want the minus sign in front of your value and valuta but changing the locale doesn't fix this then you can set NEGATIVE_FIRST to True and change the VALUTASIGN to your own currency sign in your production_yourbar.
    * ...
    * This copy is necessary to have a clear differentiation between your custom config and the pybarsys default files. Otherwise, your configuration might accidentally be overwritten when you download a pybarsys update.
    
