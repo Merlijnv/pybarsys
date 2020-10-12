@@ -56,17 +56,6 @@ def formatfunc(value):
         return '-' + PybarsysPreferences.Misc.VALUTASIGN + '{:,.2f}'.format(abs(value))
 
 
-
-@register.filter()
-def comment_url_enhancement(value):
-    validate = URLValidator()
-    try:
-        validate(value)
-        return "<a href=\"" + value + "\">" + value + "</a>"
-    except ValidationError as exception:
-        return value
-
-
 @register.filter
 def keyvalue(dict, key):
     return dict.get(key, '')
