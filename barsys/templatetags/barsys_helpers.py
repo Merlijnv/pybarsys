@@ -4,6 +4,7 @@ from re import sub as re_sub
 from bootstrap3.templatetags.bootstrap3 import bootstrap_icon
 from django import template
 from django.conf import settings
+from django.core.validators import URLValidator, ValidationError
 from django.utils import formats
 from pybarsys import settings as pybarsys_settings
 from pybarsys.settings import PybarsysPreferences
@@ -53,6 +54,17 @@ def formatfunc(value):
         return PybarsysPreferences.Misc.VALUTASIGN + '{:,.2f}'.format(value)
     else:
         return '-' + PybarsysPreferences.Misc.VALUTASIGN + '{:,.2f}'.format(abs(value))
+
+
+
+@register.filter()
+def comment_url_enhancement(value):
+    validate = URLValidator()
+    try:
+        validate(value)
+        return "<a href=\"" + value + "\">" + value + "</a>"
+    except ValidationError as exception:
+        return value
 
 
 @register.filter

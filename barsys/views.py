@@ -545,7 +545,7 @@ class InvoiceCreateView(UserIsAdminMixin, edit.FormView):
         send_dependant_notifications = form.cleaned_data["send_dependant_notifications"]
         send_payment_reminders = form.cleaned_data["send_payment_reminders"]
         autolock_accounts = form.cleaned_data["autolock_accounts"]
-        payment_link = form.cleaned_data["payment_link"]
+        comment = form.cleaned_data["comment"]
 
         skipped_users = []
         invoices = []
@@ -558,7 +558,7 @@ class InvoiceCreateView(UserIsAdminMixin, edit.FormView):
 
             if Purchase.objects.to_pay_by(user).exists() or user.payments().unbilled().exists():
                 # print("{} has {} purchases to pay for: ".format(user, purchases_to_pay.count()))
-                invoice = Invoice.objects.create_for_user(user, payment_link)
+                invoice = Invoice.objects.create_for_user(user, comment)
                 invoices.append(invoice)
             else:
                 # print("{} has no purchases to pay for".format(user))
